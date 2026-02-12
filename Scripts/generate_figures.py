@@ -4,6 +4,8 @@ Reproduction script for 2ABT behaviour models.
 Runs the full pipeline from the submodule's demo_models.ipynb notebook
 and saves all generated figures to reproduction/figures/.
 
+DO NOT MODIFY
+
 """
 
 import os
