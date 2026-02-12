@@ -1,0 +1,3 @@
+[submodule "reproduction/2ABT_behaviour_models"]
+	path = reproduction/2ABT_behaviour_models
+	url = https://github.com/celiaberon/2ABT_behavior_models.git
