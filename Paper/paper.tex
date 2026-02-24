@@ -7,7 +7,7 @@
 \usepackage{subcaption}
 \graphicspath{
   {../reproduction/figures/}
-  {../Extensions/phase2_generative}
+  {../Extensions/phase2_generative/figures}
   }
 
 \raggedbottom
@@ -67,11 +67,6 @@ Overall, this study concluded that mouse behaviour reflects stochastic, history-
 
 \section{Methods: Extensions}
 \subsection{\textbf{Generative simulations in the 70-30 reward condition:}}
-In this study, we implemented independent generative simulations of the RFLR and HMM models to reproduce and extend the original findings.
-To examine model behaviour under increased environmental uncertainty, generative simulations were performed in a 70-30 reward probability condition. This environment is more stochastic than the 80-20 baseline used in the original study, reducing the reliability of individual reward outcomes as evidence for contingency reversals. 
-Two models were evaluated: the recursive logistic regression (RFLR) model and the hidden Markov model (HMM). The RFLR was implemented using mouse-fit parameters reported by Beron et al. (2022) \cite{Beron2022}, preserving the empirically derived learning rate, stickiness, and evidence integration dynamics. The HMM was implemented using the true task parameters, including reward probabilities and transition probability, with action selection governed by a stochastic policy. 
-For each model, behavioural sessions were simulated using the generative task structure, in which reward contingencies evolved according to a two-state Markov process. Model performance was quantified using reward rate and reward-per-switch, providing measures of both reward efficiency and switching efficiency. 
-This analysis tested the hypothesis that increased environmental stochasticity would differentially affect model switching behaviour, with the HMM predicted to exhibit excessive switching relative to the RFLR. 
 
 \subsection{\textbf{Non-linear stickiness:}}
 To extend the computational framework beyond fixed stickiness, we implemented nonlinear stickiness mechanisms incorporating both temporal and informational gating. These extensions were applied to the RFLR, HMM and forgetting Q-learning (F-Q) models. Temporal gating was implemented using an N-step commitment mechanism. Following each behavioural switch, the model's policy was constrained to repeat the new choice for a fixed number of trials (N), preventing immediate reversal. This manipulation models a persistence window during which behavioural switching is temporarily suppressed. Informational gating was implemented using surprise-dependent modulation of stickiness. The effective stickiness parameter was dynamically adjusted according to recent prediction error:
@@ -200,12 +195,6 @@ Together, these results successfully reproduce the main findings of Beron et al.
 These results confirm that our implementation accurately reproduces the key behavioural and modelling findings of Beron et al. (2022), validating the simulation framework for further extensions.
 
 \subsection{Extension: Behaviour under increased uncertainty (70--30 condition)}
-We next examined how model behaviour changes under increased environmental stochasticity, representing a novel extension beyond the original study. 
-To examine model behaviour under increased environmental stochasticity, we compared performance in the 70--30 reward condition using reward rate, switching frequency, and reward-per-switch efficiency (Table~I, Figs.~6–7).
-Both models achieved similar overall reward rates (RFLR: 0.595 rewards/trial; HMM: 0.612 rewards/trial), indicating that each successfully tracked the changing reward contingencies. However, their switching strategies differed substantially. The HMM switched far more frequently than both mice and the RFLR (181.6 vs 51.6 and 55.9 switches/session, respectively; Fig.~7), demonstrating excessive sensitivity to stochastic reward outcomes.
-This difference resulted in markedly lower switching efficiency for the HMM. The RFLR achieved substantially higher reward-per-switch than the HMM (8.55 vs 2.65 rewards/switch; Fig.~6), indicating more efficient accumulation of reward per behavioural change. Importantly, the RFLR closely matched mouse switching frequency and reward rate, whereas the HMM deviated strongly from mouse behaviour despite achieving comparable overall reward rate.
-Comparing performance across reward conditions revealed that increased uncertainty disproportionately impaired HMM efficiency. Reward-per-switch declined substantially from the 80--20 to 70--30 condition (4.75 to 2.65), whereas the RFLR showed only a modest reduction (9.86 to 8.55). This suggests that stickiness mechanisms confer robustness to stochastic reward fluctuations by preventing excessive switching in response to misleading outcomes.
-Overall, these findings demonstrate that models incorporating adaptive stickiness more accurately reproduce mouse switching behaviour and maintain higher switching efficiency under increased environmental uncertainty.
 
 \subsection{Extension: Non-linear stickiness mechanisms}
 We next examined how adaptive stickiness mechanisms influence model behaviour. Introducing surprise-dependent stickiness resulted in substantial reductions in effective stickiness across all models. Although the baseline stickiness parameter was set to $\alpha = 1.2$, the mean dynamic stickiness decreased to 0.351 in the RFLR model, 0.120 in the HMM, and 0.105 in the F-Q model. This demonstrates that prediction-error-dependent modulation effectively suppressed behavioural persistence when recent outcomes were inconsistent with model predictions.
@@ -215,17 +204,39 @@ Together, these results demonstrate that adaptive stickiness mechanisms substant
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{cmp_reward_per_switch_points.png}
-\caption{\textbf{70-30 extension: reward per switch.}}
-Reward-per-switch for each model in the 70-30 environment. Higher values indicate more efficient reward collection per behavioural switch; summary statistics are reported in Table~\ref{tab:ext70_summary}.
-\label{fig:ext70_rps}
+\includegraphics[width=\linewidth]{Parameter Shift.png}
+\caption{
+\textbf{Context-dependent modulation of model parameters across reward environments.}
+Estimated parameter values for stickiness ($\alpha$), inverse temperature ($\beta$), and integration timescale ($\tau$) in the 80--20 and 70--30 reward conditions. Increasing environmental uncertainty was associated with a marked increase in effective stickiness ($\alpha$) and integration timescale ($\tau$), indicating greater behavioural persistence and slower evidence integration under noisy reward feedback. In contrast, inverse temperature ($\beta$) showed only modest variation across conditions. Error bars denote standard error across sessions. These results demonstrate that behavioural parameters adapt systematically to environmental uncertainty, supporting the hypothesis that stickiness is dynamically regulated to stabilise behaviour under stochastic reward conditions.
+}
+\label{fig:param.shift}
 \end{figure}
 \begin{figure}[t]
   \centering
-  \includegraphics[width=\linewidth]{cmp_switches_points.png}
-  \caption{\textbf{70-30 extension: switching frequency.}}
-  Number of switches per session for each model in the 70-30 environment.
-  \label{fig:ext70_switches}
+  \includegraphics[width=\linewidth]{Reward vs Cognitive Cost.png}
+\caption{
+\textbf{Trade-off between reward acquisition and switching cost across models and reward environments.}
+Relationship between total reward obtained per session and cognitive cost, defined as switching frequency, for mouse behaviour and model simulations in the 80--20 and 70--30 reward conditions. Each point represents an individual session, with larger markers indicating mean values. Under increased environmental uncertainty (70--30 condition), the hidden Markov model (HMM) exhibited substantially higher switching frequency without corresponding increases in reward, resulting in reduced reward efficiency. In contrast, the recursive logistic regression (RFLR) model maintained switching frequency and reward acquisition closer to mouse behaviour. These findings demonstrate that stickiness mechanisms improve behavioural efficiency by reducing excessive switching under stochastic reward conditions.
+}
+  \label{fig:Reward.cost}
+\end{figure}
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{Switch Dynamics.png}
+ \caption{
+\textbf{Trade-off between reward acquisition and switching cost across models and reward environments.}
+Relationship between total reward obtained per session and cognitive cost, defined as switching frequency, for mouse behaviour and model simulations in the 80--20 and 70--30 reward conditions. Each point represents an individual session, with larger markers indicating mean values. Under increased environmental uncertainty (70--30 condition), the hidden Markov model (HMM) exhibited substantially higher switching frequency without corresponding increases in reward, resulting in reduced reward efficiency. In contrast, the recursive logistic regression (RFLR) model maintained switching frequency and reward acquisition closer to mouse behaviour. These findings demonstrate that stickiness mechanisms improve behavioural efficiency by reducing excessive switching under stochastic reward conditions.
+}
+  \label{fig:Switch.dyn}
+\end{figure}
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{The Adaptive Mouse Curve.png}
+ \caption{
+\textbf{Mouse switching behaviour across reward environments.}
+Conditional switching probability as a function of trial position relative to contingency reversal in the 80--20 and 70--30 reward conditions. Switching probability increased more rapidly and reached higher peak values in the more deterministic 80--20 condition, whereas switching was slower and reduced in the more uncertain 70--30 condition. This pattern demonstrates adaptive modulation of switching behaviour according to environmental uncertainty, supporting the interpretation that behavioural stickiness is dynamically regulated to balance flexibility and stability.
+}
+  \label{fig:Adap.curve}
 \end{figure}
 
 \begin{table}[t]
@@ -262,12 +273,6 @@ Forgetting Q-learning & 0.90 & 0.015 \\
 \section{Discussion}
 
 This study reproduced and extended the findings of Beron et al. (2022), providing further insight into the computational mechanisms underlying stochastic action switching. Consistent with the original study, mouse behaviour exhibited graded, history-dependent switching that was accurately captured by the recursive logistic regression (RFLR) model but less well described by the hidden Markov model (HMM). In particular, the RFLR more closely matched the structure of conditional switching probabilities and behavioural adaptation around contingency reversals, supporting the interpretation that mouse behaviour reflects stochastic evidence integration with choice history bias rather than optimal latent-state inference.
-Extending the analysis to a more uncertain 70--30 reward environment revealed clear differences in model robustness. Although both the HMM and RFLR achieved similar - though slightly higher for HMM - overall reward rates, the HMM switched substantially more frequently, resulting in markedly lower reward-per-switch efficiency. This excessive switching suggests that inference-based models without switching constraints are overly sensitive to stochastic reward fluctuations, interpreting noise as evidence for contingency change. Mechanistically, the improved performance of the RFLR model arises from its incorporation of stickiness, which biases the agent toward repeating its previous choice. This bias acts as a stabilising prior that prevents the model from overreacting to isolated unrewarded trials, which may occur purely due to stochastic reward delivery. In contrast, the HMM interprets each unrewarded outcome as strong evidence for a latent state change, resulting in excessive switching. Under increased environmental stochasticity, this sensitivity leads to inefficient behaviour, as the model frequently switches away from the optimal action due to misleading outcomes. The stickiness mechanism therefore improves behavioural robustness by preventing overreaction to noise and enabling more reliable evidence accumulation over time. In contrast, the RFLR maintained switching frequency and efficiency close to mouse behaviour, indicating that stickiness mechanisms help stabilise behaviour by preventing premature switching in response to misleading outcomes.
-These findings highlight an important trade-off in adaptive decision-making between sensitivity to environmental change and robustness to stochastic noise. While rapid switching may allow faster adaptation following true contingency reversals, excessive switching reduces behavioural efficiency when outcomes are unreliable. The improved performance of the RFLR suggests that incorporating choice history bias provides a computationally simple and effective mechanism for balancing this trade-off.
-More broadly, these results support the view that efficient behaviour in uncertain environments does not require fully optimal Bayesian inference. Instead, animals may employ simpler history-dependent strategies that approximate optimal performance while remaining robust to environmental stochasticity. This interpretation is consistent with previous work suggesting that behavioural variability reflects structured stochasticity rather than noise.
-
-Several limitations of this study should be considered. First, the RFLR model assumes a fixed stickiness parameter, whereas animals may dynamically adjust their stickiness depending on environmental uncertainty. Incorporating adaptive stickiness mechanisms may provide a more accurate account of behavioural flexibility. Second, the generative simulations assume perfect knowledge of task parameters for the HMM, whereas real agents must learn these parameters through experience. Third, the present extension examined only a single increase in environmental stochasticity. Future work could systematically vary reward probabilities to characterise the relationship between uncertainty and switching dynamics more comprehensively.
-Finally, while these models capture behavioural dynamics at the algorithmic level, they do not directly address the neural mechanisms underlying stickiness and stochastic switching. Linking these computational processes to neural circuit activity represents an important direction for future research. Such adaptive modulation of stickiness may reflect neural mechanisms regulating exploration–exploitation balance, potentially involving dopaminergic prediction error signalling and prefrontal control systems.
 
 Mechanistically, these results demonstrate that stickiness need not be fixed but can be dynamically regulated according to environmental feedback. Surprise-dependent modulation allows the agent to reduce persistence when recent outcomes contradict expectations, facilitating behavioural flexibility. Conversely, temporal gating prevents rapid, noise-driven switching by enforcing short-term commitment following behavioural changes.
 These mechanisms address complementary limitations of the original models. Fixed stickiness improves stability but can impair flexibility when environmental contingencies change. In contrast, adaptive stickiness enables flexible adjustment of persistence according to environmental volatility.
