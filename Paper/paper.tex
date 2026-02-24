@@ -55,19 +55,26 @@ Mice exhibited graded, stochastic switching rather than deterministic responses 
 
 The authors compared models differing in how action values and environmental uncertainty were represented:
 
-\textbf{Win–Stay/Lose–Switch (WSLS).}  
+\paragraph{\textbf{Win–Stay/Lose–Switch (WSLS).}}  
 A heuristic strategy that repeats rewarded actions and switches after unrewarded outcomes. This model predicts deterministic switching and fails to capture graded behavioural responses. 
-\textbf{Reinforcement Learning (RL).}  
+\paragraph{\textbf{Reinforcement Learning (RL).}}  
 Model-free updating of action values using reward prediction errors with stochastic action selection. RL captures gradual adaptation but does not explicitly represent latent environmental states. 
-\textbf{Inference-Based Models (HMM).}  
+\paragraph{\textbf{Inference-Based Models (HMM).}}  
 A latent-state model that infers the current reward contingency from past outcomes. Switching is driven by belief updates, producing sharper transitions but overestimating switching behaviour relative to mice. 
-\textbf{Recursive Logistic Regression (RFLR).}
+\paragraph{\textbf{Recursive Logistic Regression (RFLR).}}
 A reduced model that integrates past choice-reward history with a bias toward repeating previous actions (“stickiness”). This model accurately reproduced switching behaviour and reward efficiency using a small number of parameters. 
 Overall, this study concluded that mouse behaviour reflects stochastic, history-dependent evidence integration best captured by models incorporating stochastic policies and choice history bias. 
 
 \section{Methods: Extensions}
-\subsection{\textbf{Generative simulations in the 70-30 reward condition:}}
-
+\subsection{\textbf{Behaviour under increased uncertainty (70--30 condition):}}
+\paragraph{\textbf{Cross-Validated parameter estimation across reward environments:}}
+Following the modelling framework of Beron et al. (2022)\cite{Beron2022},we fit the recursive formulation of logistic regression (RFLR) separately in the 80-20 and 70-30 reward environments.
+To ensure robust parameter recovery and prevent session-level leakage, a 5-fold cross-validation was performed at the session level. Sessions were randomly split into five folds with fixed random seed. For each fold, parameters \(\alpha\), \(\beta\), and \(\tau\) were estimated on four folds via maximum likelihood estimation. Optimisation was performed using stochastic gradient descent (10 000 steps, learning rate = 0.01), and log-likelihood was evaluated on the held-out fold. Final parameter estimates for each environment were computed as the mean across folds. This procedure therefore extends the fitting approach by explicitly validating generalisation across held-out sessions. 
+\paragraph{\textbf{Generative model simulations:}}
+Using cross-validated parameters, we generated synthetic behaviour in both reward environments under three model classes: RFLR, Ideal HMM and Sticky HMM. All simulations were performed on the true latent state sequences extracted from experimental data to maintain identical block-transition structure across models. Reward delivery probabilities were set to 0.8/0.2 or 0.7/0.3, respectively, with transition probabilities estimated from empirical block statistics. 
+\paragraph{\textbf{Behavioural metrics:}}
+To evaluate model performance at the macro-behavioural level, we quantified the trade-off between reward acquisition and behavioural cost using an efficiency frontier analysis. For each session, we computed total reward, total number of switches, and the reward-per-switch ratio. This extends the reward-per-switch analysis presented in the original paper \cite{Beron2022} by enabling direct comparison of behavioural efficiency across environments with differing levels of reward uncertainty. To characterise adaptation dynamics at the micro-behavioural level, we analysed event-triggered switching probability aligned to block reversals. Switching probability was computed within a window between five trials before and ten trials after each contingency reversal. This approach mirrors the block-aligned $P(\mathrm{switch})$
+analysis shown in the original work \cite{Beron2022}, but extends it by explicitly contrasting switching dynamics between the 80-20 and 70-30 reward conditions, thereby quantifying environment-dependent differences in cognitive lag. Finally to asses cross-environment behavioural adaptation, we compared cross-validated parameter estimates (\(\alpha\), \(\beta\), and \(\tau\)) between the two reward conditions. In particular, we tested wether adaptation was primarily mediated through modulation of the stickiness parameter \(\alpha\), consistent with the environmental adjustments reported by Beron et al. (2022)\cite{Beron2022}. 
 \subsection{\textbf{Non-linear stickiness:}}
 To extend the computational framework beyond fixed stickiness, we implemented nonlinear stickiness mechanisms incorporating both temporal and informational gating. These extensions were applied to the RFLR, HMM and forgetting Q-learning (F-Q) models. Temporal gating was implemented using an N-step commitment mechanism. Following each behavioural switch, the model's policy was constrained to repeat the new choice for a fixed number of trials (N), preventing immediate reversal. This manipulation models a persistence window during which behavioural switching is temporarily suppressed. Informational gating was implemented using surprise-dependent modulation of stickiness. The effective stickiness parameter was dynamically adjusted according to recent prediction error:
 \[
