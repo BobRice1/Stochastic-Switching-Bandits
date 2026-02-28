@@ -212,3 +212,11 @@ __marimo__/
 # Data
 .csv
 reproduction/2ABT_behaviour_models
+Paper/paper.aux
+Paper/paper.bbl
+Paper/paper.blg
+Paper/paper.fdb_latexmk
+Paper/paper.fls
+Paper/paper.out
+Paper/paper.synctex.gz
+Paper/paperNotes.bib
