@@ -112,7 +112,7 @@ Discrete temporal parameters (e.g., commitment window $N$) were selected via a n
 \paragraph{\textbf{Model design: temporal gating and surprise-dependent modulation.}}
 To extend the computational framework beyond fixed stickiness, we implemented nonlinear stickiness mechanisms that dynamically regulate behavioural persistence. These extensions were applied to RFLR, HMM, and forgetting Q-learning (F-Q) models. Temporal gating was implemented as a policy-level temporal lock applied after predicted switches. Specifically, when the model’s policy predicted a switch in choice, the selected action was locked and repeated for the subsequent $N$ trials, preventing immediate reversal. This mechanism operates at the level of policy output probabilities and produces locked choice and switch sequences used for behavioural analysis. Informational gating was implemented via surprise-dependent modulation of stickiness, where effective stickiness varies with recent prediction error:
 \[
-\alpha_{\text{dynamic}} = \alpha_{\text{base}} e^{-\gamma E},
+\alpha_{\text{dynamic}} = \alpha_{\text{base}} e^{+\gamma E},
 \]
 with $E$ denoting accumulated prediction error over the previous $N$ trials and $\gamma$ controlling sensitivity to surprise. This formulation decreases stickiness when outcomes are surprising and increases persistence when predictions are reliable.
 \paragraph{\textbf{Simulation protocol and recorded outputs.}}
