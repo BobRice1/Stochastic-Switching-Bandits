@@ -100,25 +100,13 @@ We implemented two nonlinear modifications to standard stickiness-based decision
 \end{equation}
 where $E_t$ is the accumulated prediction error over the most recent $N$ trials and $\gamma$ controls sensitivity to surprise. Second, \textit{temporal gating} enforced an $N$-step commitment after each predicted switch by applying a policy-level lock that forces repetition of the newly selected action for $N$ subsequent trials. In our implementation, temporal gating acts on the model’s policy output probabilities, generating \texttt{locked\_choices} and \texttt{locked\_switches} used for downstream summaries.
 
-\subsection{Multi-level gating framework}
-\begin{table}[h]
-\centering
-\begin{tabular}{lll}
-Model & Biological Hypothesis & Computational Mechanism \\
-\hline
-RFLR & Direct policy update & Surprise gates motor drive ($\alpha_t$) \\
-HMM$_{\text{sticky}}$ & Belief + motor gating & Bayesian belief + dynamic $\alpha_t$ \\
-HMM$_{\text{reset}}$ & Asymmetric change-point & Negative PE triggers belief reset \\
-HMM$_{\text{resetv2}}$ & Symmetric re-evaluation & Magnitude-dependent reset + asymmetric $\alpha_t$ \\
-\end{tabular}
-\caption{Computational hypotheses evaluated in Phase 4.}
-\end{table}
-\paragraph{Cross-validated likelihood optimisation.}
-Model parameters were fit using 5-fold cross-validation at the session level. For each fold, model parameters were optimised on training sessions by maximising held-out log-likelihood using the L-BFGS-B algorithm. Final performance was evaluated as the mean test log-likelihood across folds.
-\paragraph{Nested temporal parameter search.}
-Discrete temporal window parameters ($N$) were optimised via nested grid search. For motor/value models, $N \in [1,5]$, reflecting plausible short-term commitment windows. For belief-reset models, an expanded range ($N \in \{1,2,3,4,5,10,15,20\}$) was evaluated to test long-term evidence accumulation hypotheses. The optimal $N$ was selected via plurality vote across cross-validation folds.
-\paragraph{Parameter stability analysis.}
-Standard deviations of fitted parameters across folds were computed to assess population-level stability and robustness.
+\subsection{Multi-level gating framework and optimal evalusation}
+\paragraph{Model hypotheses.}
+Phase 4 evaluates distinct computational hypotheses for how agents use environmental ``surprise'' to regulate choice persistence in the 2ABT. We compare (i) a direct policy model where surprise gates motor persistence trial-by-trial (dynamic RFLR), (ii) a belief-based model where Bayesian state inference is combined with motor-level stickiness (Sticky HMM), and (iii) a temporal/value baseline where switching behaviour emerges from windowed value dynamics (FQ value-gated). In addition, belief-reset variants test whether omission-driven surprise triggers change-point detection and belief reinitialisation.
+\paragraph{Cross-validated optimisation.}
+To prevent overfitting, parameters were fit using 5-fold cross-validation over sessions. For each fold, model parameters were optimised on the training set and evaluated on held-out sessions using mean log-likelihood (Mean LL) as the primary performance metric.
+\paragraph{Nested search over temporal parameters.}
+Discrete temporal parameters (e.g., commitment window $N$) were selected via a nested search procedure. The outer loop enumerated candidate $N$ values, and the inner loop performed continuous optimisation of model parameters (e.g., $\alpha_{\mathrm{base}}$ and surprise sensitivity $\gamma$) using L-BFGS-B with bounds. Parameter stability was assessed via across-fold variability, and the optimal $N$ was selected via plurality vote across folds.
 
 \paragraph{\textbf{Model design: temporal gating and surprise-dependent modulation.}}
 To extend the computational framework beyond fixed stickiness, we implemented nonlinear stickiness mechanisms that dynamically regulate behavioural persistence. These extensions were applied to RFLR, HMM, and forgetting Q-learning (F-Q) models. Temporal gating was implemented as a policy-level temporal lock applied after predicted switches. Specifically, when the model’s policy predicted a switch in choice, the selected action was locked and repeated for the subsequent $N$ trials, preventing immediate reversal. This mechanism operates at the level of policy output probabilities and produces locked choice and switch sequences used for behavioural analysis. Informational gating was implemented via surprise-dependent modulation of stickiness, where effective stickiness varies with recent prediction error:
@@ -166,10 +154,13 @@ Temporal gating further stabilised behaviour by preventing rapid oscillatory swi
 In the F-Q model, windowed updates produced more conservative value estimates. Final Q-values remained partially separated (left = 0.394, right = 0.499), reflecting slower but more stable learning dynamics under temporally gated updating.
 Together, these results demonstrate that adaptive stickiness mechanisms substantially alter behavioural dynamics by regulating the balance between persistence and flexibility. Importantly, these effects arise without modifying the underlying reward-learning process itself, demonstrating that behavioural efficiency can be substantially altered through modulation of stickiness alone. This highlights the critical role of persistence as an independent computational control parameter governing behavioural flexibility, rather than a passive by-product of value learning. To assess whether nonlinear stickiness improves behaviour rather than only altering internal variables, we compared switching frequency and efficiency against the corresponding baseline models (fixed stickiness / ungated policy). Across sessions, temporal gating reduced rapid back-and-forth switching, producing lower switches/session and higher reward-per-switch, with minimal change in overall reward rate. Surprise-dependent modulation further reduced overswitching in high-uncertainty periods by down-weighting stickiness following large prediction errors while preserving persistence when evidence was stable. Together, these controls demonstrate that nonlinear stickiness improves behavioural efficiency under stochastic feedback by selectively suppressing noise-driven switching.
 
-\subsection{Extension: Model comparison and validation}
-\paragraph{Log-likelihood comparison.}
-Mean cross-validated log-likelihood values for each model are summarised in Table X (TABLE FROM FINAL MODEL COMP.CSV). Models incorporating dynamic surprise gating outperformed static-parameter baselines, indicating that non-linear modulation of stickiness improves predictive accuracy. Among inference-based architectures, belief-reset variants showed improved fit relative to the standard HMM, suggesting that asymmetric processing of negative surprise may better capture behavioural adaptation.
+\subsection*{Predictive Fit and Generative Validation}
 
+\paragraph{Predictive vs generative evaluation.}
+We evaluate models in two complementary regimes. In \emph{predictive mode}, models observe the mouse history to predict next-trial choice probabilities, enabling trial-by-trial comparison of micro-dynamics. In \emph{generative mode}, models act autonomously under the task contingencies using best-fit parameters, enabling assessment of whether they reproduce the mouse reward--switching trade-off when controlling their own experience.
+
+\paragraph{Cross-validated likelihood comparison.}
+Model performance was evaluated primarily using mean cross-validated log-likelihood (Mean LL) computed on held-out folds (see \texttt{phase4\_final\_model\_comparison.csv}). This provides a principled quantitative comparison of competing hypotheses and complements behavioural summary metrics by directly measuring predictive accuracy of the choice sequence.
 
 
 \begin{figure}[t]
@@ -343,6 +334,33 @@ Scatter plots compare model-predicted vs mouse-observed $P(\mathrm{switch}\mid \
 \caption{\textbf{History-dependent switching under multi-level surprise gating.}
 Conditional switching probabilities $P(\mathrm{switch}|\mathrm{history})$ for dynamic RFLR, Sticky HMM, and value-gated FQ models in the 70--30 and 80--20 reward environments. Grey bars denote empirical mouse behaviour, and blue bars denote model predictions. The dynamic RFLR model closely reproduces graded switching behaviour, whereas the Sticky HMM exhibits exaggerated switching following omission sequences. The value-gated FQ model shows intermediate agreement but slower adaptation.}
 \label{fig:history_switch}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+
+% Row 1: FQ
+\includegraphics[width=0.32\textwidth]{HDPFQ7030.pdf}
+\hfill
+\includegraphics[width=0.32\textwidth]{HDpFQ8020.pdf}
+
+\vspace{0.5em}
+
+% Row 2: HMM
+\includegraphics[width=0.32\textwidth]{HDPHMM7030.pdf}
+\hfill
+\includegraphics[width=0.32\textwidth]{HDPHMM8020.pdf}
+
+\vspace{0.5em}
+
+% Row 3: RFLR
+\includegraphics[width=0.32\textwidth]{HDPRFLR7030.pdf}
+\hfill
+\includegraphics[width=0.32\textwidth]{HDPRFLR8020.pdf}
+
+\caption{\textbf{History-dependent switching under multi-level surprise gating.}
+Conditional switching probabilities $P(\mathrm{switch}\mid\mathrm{history})$ for value-gated FQ, Sticky HMM (dynamic), and dynamic RFLR models in the 70--30 and 80--20 reward environments. Grey bars denote empirical mouse behaviour and blue bars denote model predictions. This micro-dynamic analysis tests whether models capture trial-history-level switching structure beyond aggregate switch rates.}
+\label{fig:phase4_history_switch}
 \end{figure}
 
 \section{Discussion}
