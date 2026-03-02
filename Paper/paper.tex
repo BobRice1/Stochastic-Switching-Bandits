@@ -320,48 +320,68 @@ Scatter plots compare model-predicted vs mouse-observed $P(\mathrm{switch}\mid \
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.32\textwidth]{HDPFQ7030.pdf}
-\hfill
-\includegraphics[width=0.32\textwidth]{HDpFQ8020.pdf}
-\vspace{0.5em}
-\includegraphics[width=0.32\textwidth]{HDPHMM7030.pdf}
-\hfill
-\includegraphics[width=0.32\textwidth]{HDPHMM8020.pdf}
-\vspace{0.5em}
-\includegraphics[width=0.32\textwidth]{HDPRFLR7030.pdf}
-\hfill
-\includegraphics[width=0.32\textwidth]{HDPRFLR8020.pdf}
-\caption{\textbf{History-dependent switching under multi-level surprise gating.}
-Conditional switching probabilities $P(\mathrm{switch}|\mathrm{history})$ for dynamic RFLR, Sticky HMM, and value-gated FQ models in the 70--30 and 80--20 reward environments. Grey bars denote empirical mouse behaviour, and blue bars denote model predictions. The dynamic RFLR model closely reproduces graded switching behaviour, whereas the Sticky HMM exhibits exaggerated switching following omission sequences. The value-gated FQ model shows intermediate agreement but slower adaptation.}
-\label{fig:history_switch}
-\end{figure}
-
-\begin{figure}[htbp]
-\centering
-
 % Row 1: FQ
 \includegraphics[width=0.32\textwidth]{HDPFQ7030.pdf}
 \hfill
 \includegraphics[width=0.32\textwidth]{HDpFQ8020.pdf}
-
 \vspace{0.5em}
-
 % Row 2: HMM
 \includegraphics[width=0.32\textwidth]{HDPHMM7030.pdf}
 \hfill
 \includegraphics[width=0.32\textwidth]{HDPHMM8020.pdf}
-
 \vspace{0.5em}
-
 % Row 3: RFLR
 \includegraphics[width=0.32\textwidth]{HDPRFLR7030.pdf}
 \hfill
 \includegraphics[width=0.32\textwidth]{HDPRFLR8020.pdf}
-
 \caption{\textbf{History-dependent switching under multi-level surprise gating.}
 Conditional switching probabilities $P(\mathrm{switch}\mid\mathrm{history})$ for value-gated FQ, Sticky HMM (dynamic), and dynamic RFLR models in the 70--30 and 80--20 reward environments. Grey bars denote empirical mouse behaviour and blue bars denote model predictions. This micro-dynamic analysis tests whether models capture trial-history-level switching structure beyond aggregate switch rates.}
 \label{fig:phase4_history_switch}
 \end{figure}
+
+\paragraph{History-dependent switching structure.}
+History-conditioned switching profiles reveal whether models reproduce the mouse micro-policy for responding to sequences of rewards and omissions. Across environments, dynamic gating models capture graded increases in switching probability following omission-rich histories, while differing in the extent to which they exaggerate or smooth switching after extended omission streaks.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.32\textwidth]{PswitchcorMousevsRFLR.pdf}
+\hfill
+\includegraphics[width=0.32\textwidth]{PswitchcorMousevsStickHMM.pdf}
+\hfill
+\includegraphics[width=0.32\textwidth]{PswitchcorMousevsFQ.pdf}
+
+Qualitatively, dynamic RFLR exhibits the closest alignment to the identity line, whereas Sticky HMM shows systematic deviations consistent with oversensitivity to omission histories. The value-gated FQ model shows intermediate agreement, consistent with slower adaptation in trial-by-trial switching.
+
+\caption{\textbf{Predictive micro-fit: correlation of history-dependent switching.}
+Scatter plots compare empirical mouse $P(\mathrm{switch}|\mathrm{history})$ against model-predicted values across reward histories for the 80--20 and 70--30 environments. Points closer to the identity line indicate better trial-history-level agreement.}
+\label{fig:phase4_pswitch_corr}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{RewardvscogDynmodcompar.pdf}
+\caption{\textbf{Generative validation: reward--switching efficiency frontier.}
+Generative simulations using best-fit parameters compare accumulated reward per session (value) against cognitive cost (switches per session) for mouse behaviour and dynamic gating models in both 80--20 and 70--30 environments. A good generative model should match the mouse's position in the reward--cost plane, indicating biologically plausible autonomous behaviour.}
+\label{fig:phase4_efficiency}
+\end{figure}
+
+\paragraph{Generative efficiency trade-off.}
+In generative mode, models were evaluated on their ability to reproduce the mouse's reward--switching trade-off. The reward--cognitive cost frontier reveals whether a model achieves comparable reward while avoiding excessive switching. Dynamic gating models cluster closer to the mouse distribution than static baselines, indicating that improvements in predictive fit translate into autonomous behavioural efficiency rather than purely descriptive curve-fitting.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.32\textwidth]{TransdynRFLR.pdf}
+\hfill
+\includegraphics[width=0.32\textwidth]{TransdynHMM.pdf}
+\hfill
+\includegraphics[width=0.32\textwidth]{TransdynFQ.pdf}
+
+\caption{\textbf{Transition dynamics around contingency changes.}
+Predictive-mode transition dynamics show how models track changes in latent reward state across block positions, comparing the probability of choosing the high port and the probability of switching in 80--20 and 70--30 environments. Models differ in responsiveness to reversals, revealing whether surprise gating acts primarily on motor persistence (RFLR/HMM) or via slower value updates (FQ).}
+\label{fig:phase4_transition}
+\end{figure}
+
+Across models, transition plots highlight differences in reversal responsiveness: belief-based models can react sharply to inferred state changes, whereas value-gated learning produces smoother, slower transitions consistent with temporally aggregated updates.
 
 \section{Discussion}
 This study reproduced and extended the findings of Beron et al. (2022), providing further insight into the computational mechanisms underlying stochastic action switching. Consistent with the original study, mouse behaviour exhibited graded, history-dependent switching that was accurately captured by the recursive logistic regression (RFLR) model but less well described by the hidden Markov model (HMM). In particular, the RFLR more closely matched the structure of conditional switching probabilities and behavioural adaptation around contingency reversals, supporting the interpretation that mouse behaviour reflects stochastic evidence integration with choice history bias rather than optimal latent-state inference.
@@ -370,7 +390,8 @@ These mechanisms address complementary limitations of the original models. Fixed
 These findings suggest that behavioural stickiness may function as a dynamically regulated control parameter rather than a fixed behavioural bias. This interpretation is consistent with the hypothesis that animals adjust their persistence in response to environmental uncertainty to optimise reward acquisition.
 However, several limitations should be acknowledged. First, simulations were performed using parameter values derived from previously published fits rather than independently refitting all models to the experimental dataset. Second, the nonlinear stickiness mechanisms were evaluated only using generative simulations rather than formal model fitting, limiting conclusions about whether animals truly implement such mechanisms. Finally, the relatively small number of simulated sessions may limit the statistical power of comparisons. Future work should perform full parameter optimisation and model comparison using larger datasets.
 
-Model comparison and validation results provide a principled comparison of competing neurocomputational hypotheses regarding how surprise influences decision-making. The improved performance of models with dynamic motor gating supports the interpretation that behavioural persistence is actively regulated at the policy level. In contrast, belief-reset architectures suggest that omission-specific change-point detection may contribute to rapid re-evaluation following unexpected negative outcomes. Together, these findings indicate that both motor-level persistence control and belief-level updating likely interact to shape adaptive behaviour under uncertainty.
+\paragraph{Phase 4 takeaway.}
+Together, likelihood-based comparison, micro-dynamic switching structure, and generative efficiency provide a convergent evaluation of competing hypotheses. This multi-level framework tests not only whether a model can describe the observed choices, but also whether it reproduces the functional reward--switching trade-offs and reversal responsiveness characteristic of mouse behaviour under uncertainty.
 
 \section{Conclusion}
 This study successfully reproduced and extended the computational findings of Beron et al. (2022), providing further insight into the mechanisms underlying stochastic switching behaviour in uncertain environments. Consistent with the original study, mouse behavioural dynamics were accurately captured by the recursive logistic regression model, whereas the hidden Markov model exhibited excessive switching due to its sensitivity to stochastic reward outcomes.
