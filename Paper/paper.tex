@@ -6,6 +6,8 @@
 \usepackage{subcaption}
 \usepackage{graphicx}
 
+\usepackage{graphicx}
+
 \graphicspath{
   {../reproduction/figures/}
   {../Extensions/phase2_generative/figures/}
@@ -397,7 +399,6 @@ Comparison against corresponding fixed-stickiness baselines demonstrated that No
 Importantly, these results arise from generative simulations rather than formal model fitting. They therefore demonstrate that dynamic stickiness provides a plausible computational mechanism for regulating the trade-off between persistence and flexibility, without asserting that animals necessarily implement these exact mechanisms.
 
 \begin{figure}[t]
-\begin{figure}[htbp]
 \centering
 % Row 1: FQ
 \includegraphics[width=0.32\textwidth]{HDPFQ7030.pdf}
@@ -436,7 +437,7 @@ Scatter plots compare empirical mouse $P(\mathrm{switch}|\mathrm{history})$ agai
 \label{fig:phase4_pswitch_corr}
 \end{figure}
 
-\begin{figure}[htbp]
+\begin{figure}
 \centering
 \includegraphics[width=0.85\textwidth]{RewardvscogDynmodcompar.pdf}
 \caption{\textbf{Generative validation: reward--switching efficiency frontier.}
@@ -447,7 +448,7 @@ Generative simulations using best-fit parameters compare accumulated reward per 
 \paragraph{Generative efficiency trade-off.}
 In generative mode, models were evaluated on their ability to reproduce the mouse's reward--switching trade-off. The reward--cognitive cost frontier reveals whether a model achieves comparable reward while avoiding excessive switching. Dynamic gating models cluster closer to the mouse distribution than static baselines, indicating that improvements in predictive fit translate into autonomous behavioural efficiency rather than purely descriptive curve-fitting.
 
-\begin{figure}[htbp]
+\begin{figure}
 \centering
 \includegraphics[width=0.32\textwidth]{TransdynRFLR.pdf}
 \hfill
@@ -480,6 +481,7 @@ This evidence supports the hypothesis that adaptive stickiness improves behaviou
 More broadly, these findings demonstrate that adaptive regulation of behavioural persistence provides a simple yet powerful mechanism for achieving robust performance in uncertain environments. This suggests that dynamic stickiness may represent a fundamental computational principle underlying flexible decision-making.
 
 \begin{thebibliography}{99}
+
 \bibitem{Beron2022}
 C. C. Beron, J. Nehoran, A. J. Moss, M. R. Veit, and M. R. Cohen,
 Proc. Natl. Acad. Sci. U.S.A. \textbf{119}, e2113961119 (2022).
