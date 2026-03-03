@@ -73,6 +73,7 @@ A latent-state model that infers the current reward contingency from past outcom
 P(s_t \mid o_{1:t}) \propto P(o_t \mid s_t)\sum_{s_{t-1}} P(s_t \mid s_{t-1})P(s_{t-1} \mid o_{1:t-1}),
 \]
 where $P(s_t \mid o_{1:t})$ is the posterior belief over latent reward states given observations $o_{1:t}$.
+For Sticky HMM variants, $\mathrm{PE}_t$ was defined as the difference between the observed reward and the belief-weighted expected reward under the model's current posterior belief and emission probabilities.
 \paragraph{\textbf{Recursive logistic regression (RFLR).}}
 A reduced model that predicts choices from accumulated choice--outcome history while incorporating a choice-history bias (stickiness). In the recursive formulation, the probability of choosing action $a_t$ is:
 \[
@@ -96,10 +97,20 @@ Model behaviour was evaluated using summary statistics computed at the session l
 
 \subsection{Nonlinear stickiness mechanisms}
 To extend the fixed-stickiness framework, we implemented dynamic modulation of the stickiness parameter ($\alpha$) based on recent environmental feedback. These mechanisms were applied to the RFLR, HMM, and forgetting Q-learning (F-Q) architectures and evaluated using generative simulations.
+\paragraph{Rolling window statistic}
+Let $W_t$ denote the set of indices corresponding to the most recent $N$ trials up to time $t$ (or fewer if $t<N$).
+We define the rolling statistic as
+\begin{equation}
+\bar{E}_t = \frac{1}{|W_t|}\sum_{k\in W_t} \mathrm{PE}_k.
+\end{equation}
+This statistic was updated sequentially on each trial using a fixed-length rolling buffer.
 \paragraph{\textbf{Informational gating: signed prediction-error modulation (RFLR and HMM).}}
-For the RFLR and HMM models, stickiness was dynamically scaled as a function 
-of recent signed prediction error (PE). On each trial $t > 0$, effective 
-stickiness was computed as.
+For the RFLR and HMM models, stickiness was dynamically scaled as a function of recent signed prediction error (PE).
+On each trial $t>0$, effective stickiness was computed via exponential gating:
+\begin{equation}
+\alpha_t = \alpha_{\text{base}} \exp\!\left(\gamma\,\bar{E}_t\right),
+\end{equation}
+where $\alpha_{\text{base}}$ is baseline stickiness, $\gamma$ is surprise sensitivity, and $\bar{E}_t$ is the mean PE over an $N$-trial rolling window (defined below).
 
 \paragraph{Prediction-error signals.}
 Prediction-error signals were defined to match the implementation for each model class. 
@@ -108,12 +119,17 @@ For dynamic RFLR, we used an internal expected-reward proxy $\hat r_t=\sigma(\ph
 \mathrm{PE}_t \;=\; r_t - \hat r_t,
 \qquad \mathrm{PE}_0 \;=\; r_0 - 0.5.
 \end{equation}
-For Sticky HMM variants, $\mathrm{PE}_t$ was computed using the model's current belief-weighted expected reward (implementation-matched). 
+For Sticky HMM variants, $\mathrm{PE}_t$ was defined as the difference between the observed reward and the belief-weighted expected reward under the model's current posterior belief and emission probabilities. In the nonlinear Sticky HMM implementation, emission probabilities were parameterised asymmetrically with respect to chosen action, such that the reward likelihood under each latent state depended explicitly on the action taken at trial $t$. The belief-weighted expected reward was therefore computed using this action-conditioned emission structure, consistent with the computational implementation.
 For the F-Q nonlinear stickiness variant, the gating signal used the absolute value error
 \begin{equation}
 \varepsilon_t \;=\; \bigl|\,r_t - Q_t(a_t)\,\bigr|,
 \end{equation}
-and the window statistic was $E_t=\frac{1}{|W_t|}\sum_{k\in W_t}\varepsilon_k$.
+and the rolling window statistic was defined as
+\begin{equation}
+\bar{E}_t = \frac{1}{|W_t|}\sum_{k\in W_t} \varepsilon_k,
+\end{equation}
+where $W_t$ denotes the set of indices corresponding to the most recent $N$ trials (or fewer if $t<N$).
+This rolling mean was updated sequentially at each trial and used to modulate stickiness via exponential gating.
 
 \subsection{Multi-level gating framework and optimal evaluation}
 \paragraph{Model hypotheses.}
