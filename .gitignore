@@ -137,6 +137,11 @@ celerybeat.pid
 # SageMath parsed files
 *.sage.py
 
+.DS_Store
+.DS_Store
+.DS_Store
+anaconda_projects
+
 # Environments
 .env
 .envrc
