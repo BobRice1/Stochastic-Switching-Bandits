@@ -467,18 +467,18 @@ The central contribution of this work is not an independent reimplementation of 
 Using the released pipeline, we reproduced the graded, history-dependent switching behaviour originally reported in mice. Consistent with Beron et al. (2022), recursive logistic regression (RFLR) captured the bounded, stochastic switching structure more faithfully than inference-based HMM variants, which exhibited elevated switching under stochastic reward omissions. Although this reproduction relied on the original implementation rather than an independent derivation, it confirmed the internal consistency and robustness of the modelling framework.
 
 \subsection*{Stickiness increases with environmental uncertainty}
-Extending the task to a noisier 70--30 reward environment revealed systematic modulation of fitted parameters. Cross-validated estimates showed that base stickiness increased under greater reward stochasticity, while surprise sensitivity decreased, indicating reduced trial-by-trial reactivity in noisier conditions. Because this manipulation was not explored in the original study, these findings represent a novel extension of the framework. The observed parameter shifts suggest that behavioural persistence adapts to environmental volatility rather than reflecting a fixed bias.
+Extending the task to a noisier 70--30 reward environment revealed systematic modulation of fitted parameters. Cross-validated estimates showed that base stickiness increased under greater reward stochasticity, while surprise sensitivity decreased, indicating reduced trial-by-trial reactivity in noisier conditions. Because this manipulation was not explored in the original study, these findings represent a novel extension of the framework. The observed parameter shifts suggest that behavioural persistence adapts to environmental volatility rather than reflecting a fixed bias. This interpretation is consistent with work showing that agents adjust learning and behavioural updating according to environmental uncertainty and volatility, modulating the influence of recent outcomes when feedback becomes less informative \cite{Behrens2007,Nassar2010}.
 
 \subsection*{Adaptive stickiness improves efficiency and predictive performance}
 We further introduced nonlinear, surprise-dependent modulation of stickiness. Generative simulations demonstrated that adaptive regulation can reduce excessive switching while preserving reward acquisition, particularly under increased uncertainty. Importantly, cross-validated predictive evaluation showed that dynamic RFLR achieved the highest held-out log-likelihood among adaptive variants across both environments, with reset-based Sticky HMM variants showing weaker but directionally similar improvements over inference-only baselines. These results indicate that adaptive stickiness can improve not only reward-per-switch efficiency but also predictive fidelity to observed choice sequences.
 
-Taken together, the comparative analyses reveal a consistent pattern across modelling frameworks, but the strength of evidence differs by model family. Inference-based models maximise reward but incur high switching cost due to heightened sensitivity to stochastic feedback. Static stickiness stabilises behaviour but lacks flexibility across environmental contexts. Dynamic RFLR provides the clearest evidence that adaptive modulation of persistence can recover much of the reward performance of inference-based models while maintaining bounded switching and improved efficiency; reset-based Sticky HMM variants move in the same direction, whereas the FQ-family extensions are more mixed. This positioning suggests that dynamic modulation of persistence may offer a computational middle ground between full Bayesian inference and simple heuristic repetition, capturing structured behaviour with reduced reactivity to noise.
+Taken together, the comparative analyses reveal a consistent pattern across modelling frameworks, but the strength of evidence differs by model family. Inference-based models maximise reward but incur high switching cost due to heightened sensitivity to stochastic feedback. Static stickiness stabilises behaviour but lacks flexibility across environmental contexts. Dynamic RFLR provides the clearest evidence that adaptive modulation of persistence can recover much of the reward performance of inference-based models while maintaining bounded switching and improved efficiency; reset-based Sticky HMM variants move in the same direction, whereas the FQ-family extensions are more mixed. This positioning suggests that dynamic modulation of persistence may offer a computational middle ground between full Bayesian inference and simple heuristic repetition, capturing structured behaviour with reduced reactivity to noise, consistent with resource--rational accounts in which cognitive systems approximate optimal inference using computationally efficient strategies \cite{Griffiths2015}. 
 
 \subsection*{Stickiness as a computational control parameter}
-These findings support interpreting stickiness as a volatility-sensitive control parameter regulating the flexibility--stability trade-off. Rather than functioning as a static behavioural bias, stickiness appears to scale with environmental uncertainty, stabilising decisions when feedback becomes unreliable. From this perspective, adaptive stickiness may serve as a computationally efficient surrogate for some aspects of explicit latent-state inference, approximating belief-based behaviour while reducing sensitivity to stochastic noise.
+These findings support interpreting stickiness as a volatility-sensitive control parameter regulating the flexibility--stability trade-off in decision making, a balance closely related to the exploration-exploitation dilemma studied in reinforcement learning frameworks \cite{Daw2006}. Rather than functioning as a static behavioural bias, stickiness appears to scale with environmental uncertainty, stabilising decisions when feedback becomes unreliable. From this perspective, adaptive stickiness may serve as a computationally efficient surrogate for some aspects of explicit latent-state inference, approximating belief-based behaviour while reducing sensitivity to stochastic noise.
 
 \subsection*{Relation to neural mechanisms of flexibility and persistence}
-Although the present framework is algorithmic, the adaptive modulation of stickiness suggests possible links to neural mechanisms underlying behavioural flexibility. Probabilistic reversal learning is known to engage cortico-striatal circuits, including orbitofrontal cortex and dorsal striatum, which are implicated in updating action values and regulating behavioural persistence. Dopaminergic signalling has been proposed to encode reward prediction errors, while prefrontal regions contribute to monitoring environmental volatility and controlling switching behaviour.
+Although the present framework is algorithmic, the adaptive modulation of stickiness suggests possible links to neural mechanisms underlying behavioural flexibility. Probabilistic reversal learning is known to engage cortico-striatal circuits, including orbitofrontal cortex and dorsal striatum, which are implicated in updating action values and regulating behavioural persistence \cite{Izquierdo2017}. Dopaminergic signalling has been proposed to encode reward prediction errors \cite{Schultz1997}, while prefrontal regions contribute to monitoring environmental volatility and controlling switching behaviour \cite{Behrens2007}.
 From this perspective, dynamic stickiness may be viewed as a computational motif compatible with gain-control at the level of action selection, modulated by recent prediction error signals. Increased stickiness under higher uncertainty could reflect a neural strategy for dampening reactivity to stochastic negative outcomes, thereby preventing excessive switching. Conversely, reduced stickiness under stable contingencies would permit faster adaptation following true environmental changes. These links remain speculative: the present study does not identify neural mechanisms directly, but it does generate testable predictions for neurophysiological and perturbation studies.
 
 \subsection*{Limitations}
@@ -511,6 +511,26 @@ Nat. Rev. Neurosci. \textbf{18}, 655 (2017).
 \bibitem{Daw2005}
 N. D. Daw, Y. Niv, and P. Dayan,
 Nat. Neurosci. \textbf{8}, 1704 (2005).
+
+\bibitem{Behrens2007}
+T. E. J. Behrens, M. W. Woolrich, M. E. Walton, and M. F. S. Rushworth,
+Nat. Neurosci. \textbf{10}, 1214 (2007).
+
+\bibitem{Nassar2010}
+M. R. Nassar, R. C. Wilson, B. Heasly, and J. I. Gold,
+J. Neurosci. \textbf{30}, 12366 (2010).
+
+\bibitem{Griffiths2015}
+T. L. Griffiths, F. Lieder, and N. D. Goodman,
+Top. Cogn. Sci. \textbf{7}, 217 (2015).
+
+\bibitem{Daw2006}
+N. D. Daw, J. P. O'Doherty, P. Dayan, B. Seymour, and R. J. Dolan,
+Nature \textbf{441}, 876 (2006).
+
+\bibitem{Schultz1997}
+W. Schultz, P. Dayan, and P. R. Montague,
+Science \textbf{275}, 1593 (1997).
 
 \end{thebibliography}
 
