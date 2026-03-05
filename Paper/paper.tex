@@ -13,7 +13,7 @@
 {../Extensions/p4_model_comparison/figures/Predictive models figures/}
 {../Extensions/p2_generative_fits/figures/}
 {../Extensions/p2_generative_fits/}
-{../reproduction/figures/}
+{../Reproduction/figures/}
 }
 \raggedbottom
 
@@ -49,6 +49,7 @@ Adaptive decision-making in uncertain environments requires balancing behavioura
 Beron et al. (2022) \cite{Beron2022} addressed this problem in mice performing a dynamic two-choice bandit task. They showed that mouse behaviour deviates from that of an ideal Bayesian observer performing hidden Markov model (HMM) inference, particularly in its switching dynamics. Instead, behaviour was accurately captured by a recursive logistic regression (RFLR) model incorporating a choice-history bias (“stickiness”) and a stochastic action policy. Importantly, these models achieved near-maximal reward rates despite deviating from theoretically optimal inference, suggesting that behavioural persistence functions as a stabilising mechanism under stochastic feedback.
 Although Beron et al. demonstrated that stickiness is necessary to explain mouse behaviour, the computational role of this parameter remains underspecified. In their formulation, stickiness was treated as a fixed bias that varies across reward contexts but does not adapt dynamically within a session. It therefore remains unclear whether stickiness reflects a static behavioural tendency or a control variable that is regulated online in response to environmental volatility. If stickiness buffers against stochastic reward fluctuations, it should scale with environmental uncertainty and respond to recent prediction errors. Testing this hypothesis requires extending the fixed-stickiness framework to include adaptive modulation mechanisms.
 In this study, we first establish a behavioural and modelling baseline using the framework introduced by Beron et al. (2022) under the original 80--20 reward condition. We then extend the analysis to a noisier 70--30 environment to examine how behavioural parameters scale with increased uncertainty. Finally, we introduce nonlinear, adaptive stickiness mechanisms and evaluate their effects on switching behaviour and reward efficiency using generative simulations and cross-validated predictive analyses. By integrating a validated baseline with targeted model extensions, we aim to clarify the computational role of stickiness as a dynamically regulated mechanism for behavioural persistence under uncertainty.
+
 
 \section{Methods: Baseline Framework from Beron et al. (2022)}
 \subsection{Behavioural signature of interest in the original study}
@@ -177,7 +178,7 @@ Although this validation relied on the original implementation rather than an in
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{01_mouse_cprobs_1.png}
-\caption{\textbf{Mouse baseline exhibits graded, stochastic switching.}
+\caption{\textbf{Mouse baseline exhibits graded, stochastic switching. Figure reproduced using the analysis pipeline from Beron et al. (2022).}
 Conditional switching probability $P(\text{switch}\mid\text{history})$ computed nonparametrically from mouse behaviour (history length = 3). Switching probability increases with accumulating negative evidence but remains bounded below one, demonstrating graded, stochastic rather than deterministic win--stay/lose--switch behaviour.}
 \label{fig:mouse_cprobs}
 \end{figure}
@@ -188,7 +189,7 @@ We next examined behaviour around contingency reversals. Mice exhibited gradual 
 \centering
 \begin{subfigure}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{02_logistic_regression_block_position_1.png}
-\caption{Logistic regression}
+\caption{Logistic regression.}
 \end{subfigure}\hfill
 \begin{subfigure}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{03_rflr_block_position_1.png}
@@ -206,7 +207,7 @@ We next examined behaviour around contingency reversals. Mice exhibited gradual 
 \caption{Forgetting Q-learning}
 \end{subfigure}
 
-\caption{\textbf{Model comparison around contingency reversals.}
+\caption{\textbf{Model comparison around contingency reversals. Figures reproduced using the analysis pipeline from Beron et al. (2022).}
 Choice probability (left) and switching probability (right) aligned to block transitions. RFLR and logistic regression reproduce the gradual adaptation observed in mice, whereas the HMM exhibits sharper transitions and elevated switching, reflecting oversensitivity to stochastic reward omissions.}
 \label{fig:block_dynamics}
 \end{figure*}
@@ -235,7 +236,7 @@ The RFLR closely matched the graded switching policy observed in mice (Fig.~\ref
 \caption{Forgetting Q-learning}
 \end{subfigure}
 
-\caption{\textbf{Conditional switching structure reveals HMM overswitching.}
+\caption{\textbf{Conditional switching structure reveals HMM overswitching. Figures reproduced using the analysis pipeline from Beron et al. (2022).}
 Mouse (grey) and model (blue) conditional switching probabilities across recent reward histories. RFLR closely matches the graded switching structure of mouse behaviour, while the HMM systematically overestimates switching across multiple histories.}
 \label{fig:cprobs_overlay}
 \end{figure*}
@@ -252,7 +253,7 @@ Scatter comparisons (Fig.~\ref{fig:scatter_repro}) confirmed that RFLR provided 
 \includegraphics[width=\linewidth]{04_hmm_scatter_1.png}
 \caption{HMM}
 \end{subfigure}
-\caption{\textbf{Quantitative model--mouse agreement.}
+\caption{\textbf{Quantitative model--mouse agreement. Figures reproduced using the analysis pipeline from Beron et al. (2022).}
 Scatter plots comparing model-predicted and empirical $P(\text{switch}\mid\text{history})$ values. Points closer to the identity line indicate better agreement. RFLR demonstrates stronger quantitative alignment with mouse policy than the HMM.}
 \label{fig:scatter_repro}
 \end{figure}
