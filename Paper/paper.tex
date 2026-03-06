@@ -7,6 +7,7 @@
 \usepackage{graphicx}
 \usepackage{booktabs}
 
+
 \graphicspath{
 {../Extensions/p4_model_comparison/figures/}
 {../Extensions/p4_model_comparison/figures/Generative models figures/}
@@ -36,6 +37,7 @@ The full analysis and figure-generation pipeline is available at
 
 
 \begin{abstract}
+\setlength{\parindent}{0pt}
 Adaptive decision-making in uncertain environments requires integrating reward history to guide flexible action selection. Beron et al. (2022) showed that mice performing a probabilistic two-choice bandit task exhibit graded, history-dependent stochastic switching behaviour that is accurately captured by reinforcement learning and recursive logistic regression (RFLR) models incorporating choice-history bias ("stickiness"), whereas inference-based hidden Markov models (HMMs) exhibit excessive switching. 
 Using the authors' publicly available analysis and modelling code, we first established a behavioural and modelling baseline for the original 80--20 reward condition. We then extended the analysis to a noisier 70--30 environment to examine how behavioural parameters adapt under increased reward uncertainty. Cross-validated parameter estimation revealed increased base stickiness and reduced surprise sensitivity under greater stochasticity, indicating environment-sensitive modulation of persistence.
 We further introduced nonlinear, prediction-error--dependent stickiness mechanisms and evaluated their effects using generative simulations and held-out predictive log-likelihood. Dynamic RFLR achieved the highest predictive performance among adaptive variants and improved reward-per-switch efficiency by reducing excessive switching while preserving reward acquisition. 
@@ -46,8 +48,11 @@ These findings suggest that stickiness functions not merely as a static bias, bu
 
 \section{Introduction}
 Adaptive decision-making in uncertain environments requires balancing behavioural flexibility with persistence. In probabilistic reversal learning tasks, agents must integrate reward history to infer changes in environmental contingencies while avoiding overreaction to stochastic outcomes. Such behaviour engages cortico-striatal circuits implicated in reinforcement learning and behavioural flexibility, including orbitofrontal cortex, medial prefrontal cortex, and dorsal striatum \cite{Izquierdo2017}. Dopaminergic signalling is thought to encode reward-prediction errors that guide value updating, while prefrontal regions contribute to monitoring environmental volatility and regulating behavioural persistence. Disruptions to these systems can alter switching behaviour, producing either excessive perseveration or oversensitivity to negative feedback. Thus, understanding how agents regulate persistence under stochastic reward conditions has both computational and biological significance.
+
 Beron et al. (2022) \cite{Beron2022} addressed this problem in mice performing a dynamic two-choice bandit task. They showed that mouse behaviour deviates from that of an ideal Bayesian observer performing hidden Markov model (HMM) inference, particularly in its switching dynamics. Instead, behaviour was accurately captured by a recursive logistic regression (RFLR) model incorporating a choice-history bias (“stickiness”) and a stochastic action policy. Importantly, these models achieved near-maximal reward rates despite deviating from theoretically optimal inference, suggesting that behavioural persistence functions as a stabilising mechanism under stochastic feedback.
+
 Although Beron et al. demonstrated that stickiness is necessary to explain mouse behaviour, the computational role of this parameter remains underspecified. In their formulation, stickiness was treated as a fixed bias that varies across reward contexts but does not adapt dynamically within a session. It therefore remains unclear whether stickiness reflects a static behavioural tendency or a control variable that is regulated online in response to environmental volatility. If stickiness buffers against stochastic reward fluctuations, it should scale with environmental uncertainty and respond to recent prediction errors. Testing this hypothesis requires extending the fixed-stickiness framework to include adaptive modulation mechanisms.
+
 In this study, we first establish a behavioural and modelling baseline using the framework introduced by Beron et al. (2022) under the original 80--20 reward condition. We then extend the analysis to a noisier 70--30 environment to examine how behavioural parameters scale with increased uncertainty. Finally, we introduce nonlinear, adaptive stickiness mechanisms and evaluate their effects on switching behaviour and reward efficiency using generative simulations and cross-validated predictive analyses. By integrating a validated baseline with targeted model extensions, we aim to clarify the computational role of stickiness as a dynamically regulated mechanism for behavioural persistence under uncertainty.
 
 
